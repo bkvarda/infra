@@ -18,3 +18,8 @@ variable "region" {
     description = "Region to be used"
     default     = ""
 }
+
+# These are stored in Terraform Cloud as variables/variable set
+variable "databricks_account_username" {}
+variable "databricks_account_password" {}
+variable "databricks_account_id" {}
