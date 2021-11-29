@@ -1,3 +1,14 @@
+# Some randomiziation for unique naming
+resource "random_string" "naming" {
+  special = false
+  upper   = false
+  length  = 6
+}
+
+locals {
+  prefix = "${var.workspace_prefix}-${random_string.naming.result}"
+}
+
 # Provider mode to workspace provisioning
 provider "databricks" {
   alias    = "mws"
@@ -23,7 +34,7 @@ data "terraform_remote_state" "vpc" {
 resource "databricks_mws_networks" "this" {
   provider           = databricks.mws
   account_id         = var.databricks_account_id
-  network_name       = "${var.workspace_prefix}-network"
+  network_name       = "${local.prefix}-network"
   security_group_ids = data.terraform_remote_state.vpc.outputs.dev_vpc_default_security_group_id
   subnet_ids         = data.terraform_remote_state.vpc.outputs.dev_vpc_private_subnets
   vpc_id             = data.terraform_remote_state.vpc.outputs.dev_vpc_id
@@ -31,14 +42,14 @@ resource "databricks_mws_networks" "this" {
 
 # Root bucket configuration
 resource "aws_s3_bucket" "root_storage_bucket" {
-  bucket = "${var.workspace_prefix}-rootbucket"
+  bucket = "${local.prefix}-rootbucket"
   acl    = "private"
   versioning {
     enabled = false
   }
   force_destroy = true
   tags = {
-    Name = "${var.workspace_prefix}-rootbucket"
+    Name = "${local.prefix}-rootbucket"
   }
 }
 
@@ -61,7 +72,7 @@ resource "databricks_mws_storage_configurations" "this" {
   provider                   = databricks.mws
   account_id                 = var.databricks_account_id
   bucket_name                = aws_s3_bucket.root_storage_bucket.bucket
-  storage_configuration_name = "${var.workspace_prefix}-storage"
+  storage_configuration_name = "${local.prefix}-storage"
 }
 
 # Cross-account IAM role 
@@ -70,7 +81,7 @@ data "databricks_aws_assume_role_policy" "this" {
 }
 
 resource "aws_iam_role" "cross_account_role" {
-  name               = "${var.workspace_prefix}-crossaccount"
+  name               = "${local.prefix}-crossaccount"
   assume_role_policy = data.databricks_aws_assume_role_policy.this.json
 }
 
@@ -78,7 +89,7 @@ data "databricks_aws_crossaccount_policy" "this" {
 }
 
 resource "aws_iam_role_policy" "this" {
-  name   = "${var.workspace_prefix}-policy"
+  name   = "${local.prefix}-policy"
   role   = aws_iam_role.cross_account_role.id
   policy = data.databricks_aws_crossaccount_policy.this.json
 }
@@ -87,7 +98,7 @@ resource "databricks_mws_credentials" "this" {
   provider         = databricks.mws
   account_id       = var.databricks_account_id
   role_arn         = aws_iam_role.cross_account_role.arn
-  credentials_name = "${var.workspace_prefix}-creds"
+  credentials_name = "${local.prefix}-creds"
   depends_on       = [aws_iam_role_policy.this]
 }
 
