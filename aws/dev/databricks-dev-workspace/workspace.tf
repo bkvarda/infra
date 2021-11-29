@@ -119,6 +119,8 @@ resource "databricks_mws_workspaces" "this" {
 provider "databricks" {
   alias = "created_workspace"
   host = databricks_mws_workspaces.this.workspace_url
+  username = var.databricks_account_username
+  password = var.databricks_account_password
 }
 
 // create PAT token to provision entities within workspace
