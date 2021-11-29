@@ -24,8 +24,8 @@ resource "databricks_mws_networks" "this" {
   provider           = databricks.mws
   account_id         = var.databricks_account_id
   network_name       = "${var.workspace_prefix}-network"
-  security_group_ids = [data.terraform_remote_state.vpc.outputs.dev_default_security_group_id]
-  subnet_ids         = data.terraform_remote_state.vpc.outputs.dev_private_subnets
+  security_group_ids = [data.terraform_remote_state.vpc.outputs.dev_vpc_default_security_group_id]
+  subnet_ids         = data.terraform_remote_state.vpc.outputs.dev_vpc_private_subnets
   vpc_id             = data.terraform_remote_state.vpc.outputs.dev_vpc_id
 }
 
