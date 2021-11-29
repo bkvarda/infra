@@ -3,3 +3,7 @@ terraform {
 
   backend "remote" {}
 }
+
+provider "aws" {
+    region = var.region
+}

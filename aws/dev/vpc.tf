@@ -2,7 +2,9 @@ locals {
     region = "us-east-2"
 }
 
-
+data "aws_availability_zones" "available" {
+    state = "available"
+}
 
 resource "aws_eip" "dev_nat_ip" {
     count = 1
