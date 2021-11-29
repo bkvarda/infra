@@ -124,6 +124,7 @@ provider "databricks" {
 // create PAT token to provision entities within workspace
 resource "databricks_token" "pat" {
   provider = databricks.created_workspace
+  depends_on = databricks_mws_workspaces.this
   comment  = "Terraform Provisioning"
   lifetime_seconds = 86400
 }
