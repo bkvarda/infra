@@ -1,4 +1,4 @@
-# Provider
+# Provider mode to workspace provisioning
 provider "databricks" {
   alias    = "mws"
   host     = "https://accounts.cloud.databricks.com"
@@ -102,6 +102,12 @@ resource "databricks_mws_workspaces" "this" {
   credentials_id           = databricks_mws_credentials.this.credentials_id
   storage_configuration_id = databricks_mws_storage_configurations.this.storage_configuration_id
   network_id               = databricks_mws_networks.this.network_id
+}
+
+### Set provider back to normal mode
+provider "databricks" {
+  alias = "created_workspace"
+  host = databricks_mws_workspaces.this.workspace_url
 }
 
 // create PAT token to provision entities within workspace
