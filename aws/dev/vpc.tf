@@ -12,7 +12,7 @@ resource "aws_eip" "dev_nat_ip" {
 module "dev_vpc" {
   source = "terraform-aws-modules/vpc/aws"
 
-  name = vars.vpc_name
+  name = var.vpc_name
   cidr = "10.0.0.0/16"
 
   azs             = data.aws_availability_zones.available.names
@@ -20,7 +20,7 @@ module "dev_vpc" {
   public_subnets  = ["10.0.101.0/24", "10.0.102.0/24", "10.0.103.0/24"]
 
   enable_dns_hostnames = true
-  enable_nat_gateway = vars.provision_nat_gw
+  enable_nat_gateway = var.provision_nat_gw
   create_igw = true
   single_nat_gateway = true
   enable_vpn_gateway = false
