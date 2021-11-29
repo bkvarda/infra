@@ -1,5 +1,11 @@
-output "dev_vpc" {
-    vpc_id = module.dev_vpc.vpc_id
-    private_subnets = module.dev_vpc.private_subnets
-    default_security_group_id = [module.dev_vpc.default_security_group_id]
+output "dev_vpc_id" {
+    value = module.dev_vpc.vpc_id
+}
+
+output "dev_vpc_private_subnets" {
+    value = module.dev_vpc.private_subnets
+}
+
+output "dev_vpc_default_security_group_id" {
+    value = [module.dev_vpc.default_security_group_id]
 }
