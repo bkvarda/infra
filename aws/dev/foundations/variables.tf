@@ -9,6 +9,10 @@ variable "vpc_name" {
     default     = ""
 }
 
+variable "other_vpc_name" {
+    default = "other"
+}
+
 variable "region" {
     description = "Region to be used"
     default     = ""
