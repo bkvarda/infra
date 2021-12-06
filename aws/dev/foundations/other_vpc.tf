@@ -6,7 +6,7 @@ data "aws_availability_zones" "other_available" {
     state = "available"
 }
 
-resource "aws_eip" "dev_nat_ip" {
+resource "aws_eip" "other_dev_nat_ip" {
     count = 1
     vpc = true
 }
@@ -27,7 +27,7 @@ module "other_dev_vpc" {
   single_nat_gateway = true
   enable_vpn_gateway = false
   reuse_nat_ips = true
-  external_nat_ip_ids = "${aws_eip.dev_nat_ip.*.id}"
+  external_nat_ip_ids = "${aws_eip.other_dev_nat_ip.*.id}"
 
   default_security_group_egress = [{
     cidr_blocks = "0.0.0.0/0"
