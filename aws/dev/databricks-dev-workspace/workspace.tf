@@ -34,10 +34,10 @@ data "terraform_remote_state" "vpc" {
 resource "databricks_mws_networks" "this" {
   provider           = databricks.mws
   account_id         = var.databricks_account_id
-  network_name       = "${local.prefix}-network"
-  security_group_ids = data.terraform_remote_state.vpc.outputs.dev_vpc_default_security_group_id
-  subnet_ids         = data.terraform_remote_state.vpc.outputs.dev_vpc_private_subnets
-  vpc_id             = data.terraform_remote_state.vpc.outputs.dev_vpc_id
+  network_name       = "${local.prefix}-other-network"
+  security_group_ids = data.terraform_remote_state.vpc.outputs.other_dev_vpc_default_security_group_id
+  subnet_ids         = data.terraform_remote_state.vpc.outputs.other_dev_vpc_private_subnets
+  vpc_id             = data.terraform_remote_state.vpc.outputs.other_dev_vpc_id
 }
 
 # Root bucket configuration
