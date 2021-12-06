@@ -34,6 +34,15 @@ data "terraform_remote_state" "vpc" {
 resource "databricks_mws_networks" "this" {
   provider           = databricks.mws
   account_id         = var.databricks_account_id
+  network_name       = "${local.prefix}-network"
+  security_group_ids = data.terraform_remote_state.vpc.outputs.dev_vpc_default_security_group_id
+  subnet_ids         = data.terraform_remote_state.vpc.outputs.dev_vpc_private_subnets
+  vpc_id             = data.terraform_remote_state.vpc.outputs.dev_vpc_id
+}
+
+resource "databricks_mws_networks" "this_other" {
+  provider           = databricks.mws
+  account_id         = var.databricks_account_id
   network_name       = "${local.prefix}-other-network"
   security_group_ids = data.terraform_remote_state.vpc.outputs.other_dev_vpc_default_security_group_id
   subnet_ids         = data.terraform_remote_state.vpc.outputs.other_dev_vpc_private_subnets
@@ -112,7 +121,7 @@ resource "databricks_mws_workspaces" "this" {
 
   credentials_id           = databricks_mws_credentials.this.credentials_id
   storage_configuration_id = databricks_mws_storage_configurations.this.storage_configuration_id
-  network_id               = databricks_mws_networks.this.network_id
+  network_id               = databricks_mws_networks.this_other.network_id
 }
 
 ### Set provider back to normal mode
