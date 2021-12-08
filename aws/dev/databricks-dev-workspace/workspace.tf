@@ -178,20 +178,3 @@ resource "aws_iam_instance_profile" "shared" {
 resource "databricks_instance_profile" "shared" {
   instance_profile_arn = aws_iam_instance_profile.shared.arn
 }
-resource "databricks_cluster" "this" {
-  cluster_name            = "Shared Autoscaling"
-  spark_version           = "6.6.x-scala2.11"
-  node_type_id            = "i3.xlarge"
-  autotermination_minutes = 20
-  autoscale {
-    min_workers = 1
-    max_workers = 50
-  }
-  aws_attributes {
-    instance_profile_arn    = databricks_instance_profile.shared.id
-    availability            = "SPOT"
-    zone_id                 = "us-east-1"
-    first_on_demand         = 1
-    spot_bid_price_percent  = 100
-  }
-}
