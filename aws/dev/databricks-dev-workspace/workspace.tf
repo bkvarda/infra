@@ -176,5 +176,6 @@ resource "aws_iam_instance_profile" "shared" {
   role = aws_iam_role.role_for_s3_access.name
 }
 resource "databricks_instance_profile" "shared" {
+  provider = databricks.created_workspace
   instance_profile_arn = aws_iam_instance_profile.shared.arn
 }
