@@ -103,8 +103,8 @@ resource "databricks_mws_credentials" "this" {
 }
 
 resource "time_sleep" "wait_a_few_seconds" {
-  depends_on = [databricks_mws_credentials.this]
-  create_duration = "5s"
+  depends_on = [databricks_mws_credentials.this, databricks_mws_networks.this, databricks_mws_storage_configurations.this]
+  create_duration = "10s"
 }
 
 ### Provision workspace
@@ -113,6 +113,7 @@ resource "databricks_mws_workspaces" "this" {
   account_id      = var.databricks_account_id
   aws_region      = var.region
   workspace_name  = var.workspace_prefix
+  depends_on      = [time_sleep.wait_a_few_seconds]
   //deployment_name = var.workspace_prefix
 
   credentials_id           = databricks_mws_credentials.this.credentials_id
