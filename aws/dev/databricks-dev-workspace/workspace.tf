@@ -72,6 +72,9 @@ resource "aws_s3_bucket_public_access_block" "data_storage_bucket1" {
 data "databricks_aws_bucket_policy" "this" {
   bucket = aws_s3_bucket.root_storage_bucket.bucket
 }
+data "databricks_aws_bucket_policy" "data_policy" {
+  bucket = aws_s3_bucket.data_storage_bucket1.bucket
+}
 
 resource "aws_s3_bucket_policy" "root_bucket_policy" {
   bucket = aws_s3_bucket.root_storage_bucket.id
@@ -80,7 +83,7 @@ resource "aws_s3_bucket_policy" "root_bucket_policy" {
 
 resource "aws_s3_bucket_policy" "data_bucket_policy1" {
   bucket = aws_s3_bucket.data_storage_bucket1.id
-  policy = data.databricks_aws_bucket_policy.this.json
+  policy = data.databricks_aws_bucket_policy.data_policy.json
 }
 
 resource "databricks_mws_storage_configurations" "this" {
