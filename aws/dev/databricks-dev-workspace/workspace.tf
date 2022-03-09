@@ -43,10 +43,6 @@ resource "databricks_mws_networks" "this" {
 # Root bucket configuration
 resource "aws_s3_bucket" "root_storage_bucket" {
   bucket = "${local.prefix}-rootbucket"
-  acl    = "private"
-  versioning {
-    enabled = false
-  }
   force_destroy = true
   tags = {
     Name = "${local.prefix}-rootbucket"
@@ -56,10 +52,6 @@ resource "aws_s3_bucket" "root_storage_bucket" {
 # Data bucket configuration
 resource "aws_s3_bucket" "data_storage_bucket1" {
   bucket = "${local.prefix}-databucket1"
-  acl    = "private"
-  versioning {
-    enabled = false
-  }
   force_destroy = true
   tags = {
     Name = "${local.prefix}-databucket1"
