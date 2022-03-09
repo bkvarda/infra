@@ -53,18 +53,41 @@ resource "aws_s3_bucket" "root_storage_bucket" {
   }
 }
 
+# Data bucket configuration
+resource "aws_s3_bucket" "data_storage_bucket1" {
+  bucket = "${local.prefix}-databucket1"
+  acl    = "private"
+  versioning {
+    enabled = false
+  }
+  force_destroy = true
+  tags = {
+    Name = "${local.prefix}-databucket1"
+  }
+}
+
 resource "aws_s3_bucket_public_access_block" "root_storage_bucket" {
   bucket             = aws_s3_bucket.root_storage_bucket.id
   ignore_public_acls = true
   depends_on         = [aws_s3_bucket.root_storage_bucket]
 }
 
+resource "aws_s3_bucket_public_access_block" "data_storage_bucket1" {
+  bucket             = aws_s3_bucket.data_storage_bucket1.id
+  ignore_public_acls = true
+  depends_on         = [aws_s3_bucket.data_storage_bucket1]
+}
 data "databricks_aws_bucket_policy" "this" {
   bucket = aws_s3_bucket.root_storage_bucket.bucket
 }
 
 resource "aws_s3_bucket_policy" "root_bucket_policy" {
   bucket = aws_s3_bucket.root_storage_bucket.id
+  policy = data.databricks_aws_bucket_policy.this.json
+}
+
+resource "aws_s3_bucket_policy" "data_bucket_policy1" {
+  bucket = aws_s3_bucket.data_storage_bucket1.id
   policy = data.databricks_aws_bucket_policy.this.json
 }
 
